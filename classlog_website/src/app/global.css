@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #EA2264;
+  --color-warning: #F78D60;
+  --color-background: #0a0a0c;
+  --color-surface: #15151a;
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #a0a0b0;
+}
+
+:root {
+  --accent: #EA2264;
+  --warning: #F78D60;
+  --background: #0a0a0c;
+  --surface: #15151a;
+  --text-main: #FFFFFF;
+  --text-muted: #a0a0b0;
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--text-main);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer components {
+  .panel-card {
+    background-color: var(--surface);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .panel-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  .panel-card.active {
+    border-color: var(--accent);
+    background-color: rgba(234, 34, 100, 0.05);
+  }
+
+  .panel-card.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: var(--accent);
+  }
+
+  .academic-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .academic-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .academic-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+  }
+
+  .academic-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
