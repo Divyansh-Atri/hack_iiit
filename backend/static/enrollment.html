@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams Speaker Enrollment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        input[type="text"], input[type="file"], select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        button:hover {
+            background: #106ebe;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .btn-danger {
+            background: #d13438;
+        }
+        .btn-danger:hover {
+            background: #a4262c;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .student-list {
+            list-style: none;
+        }
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .student-item:last-child {
+            border-bottom: none;
+        }
+        .student-info {
+            flex: 1;
+        }
+        .student-name {
+            font-weight: 500;
+            color: #333;
+        }
+        .student-roll {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .student-status {
+            margin-left: 15px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+        .status-enrolled {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-not-enrolled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .student-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .alert {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-input-wrapper input[type="file"] {
+            padding: 8px;
+        }
+        .enroll-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .enroll-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        .recording-controls {
+            text-align: center;
+            padding: 20px;
+        }
+        .record-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            font-size: 24px;
+            margin: 10px;
+        }
+        .record-button.recording {
+            background: #d13438;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .audio-level {
+            margin: 10px 0;
+            height: 20px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .audio-level-bar {
+            height: 100%;
+            background: #0078d4;
+            transition: width 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <h1>Teams Speaker Enrollment</h1>
+    <p class="subtitle">Enroll students for real-time speaker identification</p>
+    
+    <div id="alerts"></div>
+    
+    <!-- Add Student Section -->
+    <div class="section">
+        <h2>Add Student</h2>
+        <div class="form-group">
+            <label for="studentName">Name *</label>
+            <input type="text" id="studentName" placeholder="Enter student name" required>
+        </div>
+        <div class="form-group">
+            <label for="studentRoll">Roll Number (optional)</label>
+            <input type="text" id="studentRoll" placeholder="Enter roll number">
+        </div>
+        <button onclick="addStudent()">Add Student</button>
+    </div>
+    
+    <!-- Enrollment Section -->
+    <div class="section">
+        <h2>Enroll Student</h2>
+        <div class="enroll-section">
+            <div>
+                <div class="form-group">
+                    <label for="enrollStudent">Select Student</label>
+                    <select id="enrollStudent">
+                        <option value="">-- Select a student --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="audioFile">Upload Audio File (WAV)</label>
+                    <input type="file" id="audioFile" accept="audio/wav,audio/*">
+                </div>
+                <button onclick="enrollStudent()">Enroll from File</button>
+            </div>
+            <div>
+                <div class="recording-controls">
+                    <p>Or record directly:</p>
+                    <button class="record-button" id="recordButton" onclick="toggleRecording()">🎤</button>
+                    <div class="audio-level" id="audioLevel" style="display: none;">
+                        <div class="audio-level-bar" id="audioLevelBar" style="width: 0%"></div>
+                    </div>
+                    <p id="recordingStatus">Click to start recording</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Students List -->
+    <div class="section">
+        <h2>Enrolled Students</h2>
+        <ul class="student-list" id="studentList">
+            <li>Loading...</li>
+        </ul>
+    </div>
+    
+    <!-- Test Recognition -->
+    <div class="section">
+        <h2>Test Recognition</h2>
+        <div class="form-group">
+            <label for="testAudioFile">Upload Test Audio (WAV)</label>
+            <input type="file" id="testAudioFile" accept="audio/wav,audio/*">
+        </div>
+        <button onclick="testRecognition()">Test Recognition</button>
+        <div id="testResults" style="margin-top: 15px;"></div>
+    </div>
+    
+    <script>
+        let students = [];
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let isRecording = false;
+        let audioContext = null;
+        let analyser = null;
+        let animationFrame = null;
+        
+        // Load students on page load
+        window.addEventListener('load', () => {
+            loadStudents();
+        });
+        
+        async function loadStudents() {
+            try {
+                const response = await fetch('/api/students');
+                const data = await response.json();
+                students = data.students || [];
+                renderStudents();
+                updateEnrollSelect();
+            } catch (error) {
+                showAlert('Error loading students: ' + error.message, 'error');
+            }
+        }
+        
+        function renderStudents() {
+            const list = document.getElementById('studentList');
+            if (students.length === 0) {
+                list.innerHTML = '<li>No students added yet</li>';
+                return;
+            }
+            
+            list.innerHTML = students.map(student => `
+                <li class="student-item">
+                    <div class="student-info">
+                        <div class="student-name">${escapeHtml(student.name)}</div>
+                        ${student.roll ? `<div class="student-roll">Roll: ${escapeHtml(student.roll)}</div>` : ''}
+                    </div>
+                    <span class="student-status ${student.enrolled ? 'status-enrolled' : 'status-not-enrolled'}">
+                        ${student.enrolled ? '✓ Enrolled' : 'Not Enrolled'}
+                    </span>
+                    <div class="student-actions">
+                        ${!student.enrolled ? `<button onclick="enrollStudentById('${student.id}')">Enroll</button>` : ''}
+                        <button class="btn-danger" onclick="deleteStudent('${student.id}')">Delete</button>
+                    </div>
+                </li>
+            `).join('');
+        }
+        
+        function updateEnrollSelect() {
+            const select = document.getElementById('enrollStudent');
+            select.innerHTML = '<option value="">-- Select a student --</option>' +
+                students.map(s => `<option value="${s.id}">${s.name}${s.roll ? ' (' + s.roll + ')' : ''}</option>`).join('');
+        }
+        
+        async function addStudent() {
+            const name = document.getElementById('studentName').value.trim();
+            const roll = document.getElementById('studentRoll').value.trim();
+            
+            if (!name) {
+                showAlert('Please enter a student name', 'error');
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('name', name);
+                formData.append('roll', roll);
+                
+                const response = await fetch('/api/students', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    showAlert('Student added successfully', 'success');
+                    document.getElementById('studentName').value = '';
+                    document.getElementById('studentRoll').value = '';
+                    await loadStudents();
+                } else {
+                    const error = await response.json();
+                    showAlert('Error: ' + (error.detail || 'Failed to add student'), 'error');
+                }
+            } catch (error) {
+                showAlert('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function enrollStudent() {
+            const studentId = document.getElementById('enrollStudent').value;
+            const fileInput = document.getElementById('audioFile');
+            
+            if (!studentId) {
+                showAlert('Please select a student', 'error');
+                return;
+            }
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                showAlert('Please select an audio file', 'error');
+                return;
+            }
+            
+            await enrollStudentWithFile(studentId, fileInput.files[0]);
+        }
+        
+        async function enrollStudentById(studentId) {
+            const fileInput = document.getElementById('audioFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                showAlert('Please select an audio file first', 'error');
+                return;
+            }
+            await enrollStudentWithFile(studentId, fileInput.files[0]);
+        }
+        
+        async function enrollStudentWithFile(studentId, file) {
+            try {
+                const formData = new FormData();
+                formData.append('audio_file', file);
+                
+                showAlert('Processing enrollment...', 'info');
+                
+                const response = await fetch(`/api/students/${studentId}/enroll`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showAlert(`Enrollment successful! Duration: ${result.duration_seconds.toFixed(1)}s`, 'success');
+                    document.getElementById('audioFile').value = '';
+                    await loadStudents();
+                } else {
+                    showAlert('Error: ' + (result.detail || 'Enrollment failed'), 'error');
+                }
+            } catch (error) {
+                showAlert('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function deleteStudent(studentId) {
+            if (!confirm('Are you sure you want to delete this student?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/students/${studentId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    showAlert('Student deleted', 'success');
+                    await loadStudents();
+                } else {
+                    showAlert('Error deleting student', 'error');
+                }
+            } catch (error) {
+                showAlert('Error: ' + error.message, 'error');
+            }
+        }
+        
+        async function toggleRecording() {
+            if (!isRecording) {
+                await startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+        
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = async () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const studentId = document.getElementById('enrollStudent').value;
+                    if (studentId) {
+                        await enrollStudentWithFile(studentId, audioBlob);
+                    }
+                    stream.getTracks().forEach(track => track.stop());
+                };
+                
+                // Setup audio level visualization
+                audioContext = new AudioContext();
+                analyser = audioContext.createAnalyser();
+                const source = audioContext.createMediaStreamSource(stream);
+                source.connect(analyser);
+                analyser.fftSize = 256;
+                updateAudioLevel();
+                
+                mediaRecorder.start();
+                isRecording = true;
+                document.getElementById('recordButton').classList.add('recording');
+                document.getElementById('recordButton').textContent = '⏹';
+                document.getElementById('recordingStatus').textContent = 'Recording... Click to stop';
+                document.getElementById('audioLevel').style.display = 'block';
+            } catch (error) {
+                showAlert('Error accessing microphone: ' + error.message, 'error');
+            }
+        }
+        
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                document.getElementById('recordButton').classList.remove('recording');
+                document.getElementById('recordButton').textContent = '🎤';
+                document.getElementById('recordingStatus').textContent = 'Click to start recording';
+                document.getElementById('audioLevel').style.display = 'none';
+                
+                if (animationFrame) {
+                    cancelAnimationFrame(animationFrame);
+                }
+            }
+        }
+        
+        function updateAudioLevel() {
+            if (!analyser || !isRecording) return;
+            
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(dataArray);
+            const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+            const level = (average / 255) * 100;
+            
+            document.getElementById('audioLevelBar').style.width = level + '%';
+            
+            animationFrame = requestAnimationFrame(updateAudioLevel);
+        }
+        
+        async function testRecognition() {
+            const fileInput = document.getElementById('testAudioFile');
+            if (!fileInput.files || fileInput.files.length === 0) {
+                showAlert('Please select a test audio file', 'error');
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('audio_file', fileInput.files[0]);
+                
+                showAlert('Testing recognition...', 'info');
+                
+                const response = await fetch('/api/test-recognition', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                const resultsDiv = document.getElementById('testResults');
+                if (response.ok && result.results) {
+                    let html = '<h3>Recognition Results:</h3><ul>';
+                    result.results.forEach(r => {
+                        html += `<li>${escapeHtml(r.name)}: ${(r.confidence * 100).toFixed(1)}%</li>`;
+                    });
+                    html += '</ul>';
+                    if (result.best_match) {
+                        html += `<p><strong>Best Match:</strong> ${escapeHtml(result.best_match.name)} (${(result.best_match.confidence * 100).toFixed(1)}%)</p>`;
+                    }
+                    resultsDiv.innerHTML = html;
+                } else {
+                    resultsDiv.innerHTML = '<p>Error: ' + (result.detail || 'Recognition failed') + '</p>';
+                }
+            } catch (error) {
+                showAlert('Error: ' + error.message, 'error');
+            }
+        }
+        
+        function showAlert(message, type) {
+            const alertsDiv = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertsDiv.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
