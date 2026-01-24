@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Classes: Readable by all authenticated users, writable by admins only
+    match /classes/{classId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Sessions: Complex access control
+    match /sessions/{sessionId} {
+      // Allow read if:
+      // 1. User is admin, OR
+      // 2. Join code is provided and matches (via callable function)
+      allow read: if request.auth != null && (
+        isAdmin() || 
+        resource.data.joinCode == request.query.joinCode
+      );
+      
+      // Only admins can create/update/delete sessions
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Users: Users can read their own data, admins can read all
+    match /users/{userId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId || 
+        isAdmin()
+      );
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if isAdmin();
+    }
+
+    // Access logs: Readable by admins only
+    match /accessLogs/{logId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
