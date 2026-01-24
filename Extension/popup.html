@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Teams Accessibility</h1>
+    
+    <!-- Backend Connection Status -->
+    <div class="section">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Backend Status:</span>
+        <span id="backendStatus" style="font-weight: bold;">Checking...</span>
+      </div>
+      <div style="margin-top: 8px; display: flex; gap: 8px;">
+        <button id="reconnect" style="flex: 1;">🔄 Reconnect</button>
+        <button id="enrollment" style="flex: 1;">📝 Enrollment</button>
+      </div>
+      <div style="margin-top: 8px; display: flex; gap: 8px;">
+        <button id="startRecognition" style="flex: 1; background: #4caf50;">▶ Start</button>
+        <button id="stopRecognition" style="flex: 1; background: #f44336;">⏹ Stop</button>
+      </div>
+    </div>
+    
+    <div class="section">
+      <label class="toggle">
+        <input type="checkbox" id="enabled">
+        <span class="slider"></span>
+        Enable Overlay
+      </label>
+    </div>
+
+    <div class="section">
+      <label>Font Size: <span id="fontSize">48</span>px</label>
+      <div class="range-group">
+        <input type="range" id="fontSizeRange" min="24" max="120" value="48">
+        <div class="range-buttons">
+          <button id="fontSmaller">-</button>
+          <button id="fontLarger">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <label>Position:</label>
+      <select id="position">
+        <option value="top">Top</option>
+        <option value="center">Center</option>
+        <option value="bottom">Bottom</option>
+      </select>
+    </div>
+
+    <div class="section">
+      <label>Background Opacity:</label>
+      <input type="range" id="bgOpacity" min="0.1" max="1" step="0.1" value="0.9">
+      <span id="opacityValue">90%</span>
+    </div>
+
+    <div class="section">
+      <label class="toggle">
+        <input type="checkbox" id="showLastSpeakers">
+        <span class="slider"></span>
+        Show Last 3 Speakers
+      </label>
+    </div>
+
+    <div class="section">
+      <label class="toggle">
+        <input type="checkbox" id="showConfidence">
+        <span class="slider"></span>
+        Show Confidence %
+      </label>
+    </div>
+
+    <div class="section">
+      <label class="toggle">
+        <input type="checkbox" id="debug">
+        <span class="slider"></span>
+        Debug Mode
+      </label>
+    </div>
+
+    <div class="section">
+      <button id="save">💾 Save Settings</button>
+    </div>
+
+    <div class="shortcuts">
+      <h3>Keyboard Shortcuts</h3>
+      <div>Alt+O: Toggle overlay</div>
+      <div>Alt+↑/↓: Font size</div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

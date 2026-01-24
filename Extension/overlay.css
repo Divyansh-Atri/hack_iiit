@@ -1,0 +1,105 @@
+/* PASTE overlay.css CODE HERE */
+/* Teams Accessibility Overlay Styles */
+#teams-accessibility-overlay {
+  position: fixed;
+  z-index: 2147483647 !important;
+  pointer-events: none;
+  flex-direction: column;
+  align-items: center;
+  max-width: 90vw;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  border-radius: 12px;
+  padding: 16px 24px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-height: 80px;
+  justify-content: center;
+  color: #ffffff;
+  text-shadow: 
+    0 0 5px rgba(0,0,0,0.8),
+    2px 2px 4px rgba(0,0,0,0.6);
+}
+
+.speaker-name {
+  font-size: inherit;
+  min-height: 1em;
+}
+
+.source-indicator {
+  font-size: 0.6em;
+  opacity: 0.8;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.confidence {
+  font-size: 0.5em;
+  opacity: 0.7;
+  font-weight: 400;
+  margin-top: 4px;
+}
+
+.status-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.last-speakers {
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  max-width: 300px;
+  font-size: 0.7em;
+}
+
+.last-speakers > div {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.last-speakers > div:last-child {
+  border-bottom: none;
+}
+
+.last-speakers span {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9em;
+}
+
+/* High contrast accessibility */
+@media (prefers-contrast: high) {
+  #teams-accessibility-overlay {
+    border: 3px solid #ffffff;
+    background: rgba(0,0,0,0.95) !important;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #teams-accessibility-overlay {
+    transition: none;
+  }
+}
+
+/* Debug mode visual indicators */
+body[data-debug="true"] #teams-accessibility-overlay {
+  border: 2px solid #ff4081 !important;
+}
