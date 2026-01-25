@@ -71,11 +71,17 @@ class RecognitionLoop:
             
             # Only process if speech detected
             if vad_result["is_speaking"]:
+                # Always print for debugging
+                print(f"[RecognitionLoop] Speech detected! (RMS: {vad_result['rms']:.4f})")
+                
                 # Speaker recognition
                 speaker_id, confidence, should_update = self.recognizer.process_with_hysteresis(
                     audio, 
                     self.audio_capture.sample_rate
                 )
+                
+                # Debug log for recognition result
+                print(f"[RecognitionLoop] Result: {speaker_id} ({confidence:.1%}) - Update: {should_update}")
                 
                 if should_update or speaker_id != self.recognizer.current_speaker:
                     speaker_name = self.recognizer.get_speaker_name(speaker_id)

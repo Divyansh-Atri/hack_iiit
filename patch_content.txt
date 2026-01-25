@@ -1,0 +1,13 @@
+
+    # Attempt to fetch the custom module
+    try:
+        pymodule_local_path = fetch(
+            filename=pymodule_file,
+            source=source,
+            savedir=savedir,
+            overwrite=False,
+            save_filename=pymodule_file,
+            use_auth_token=use_auth_token,
+        )
+    except Exception:
+        pymodule_local_path = None

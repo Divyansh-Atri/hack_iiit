@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Data files (sensitive)
+backend/data/students.json
+backend/data/embeddings/*.npy
+backend/data/logs/*
+
+# Models (downloaded by SpeechBrain)
+.speechbrain/
+*.pt
+*.pth
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Extension (keep source, ignore build artifacts if any)
+Extension/*.zip
+Extension/*.crx
+
+# Logs
+*.log

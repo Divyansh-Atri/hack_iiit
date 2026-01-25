@@ -82,7 +82,7 @@ class AudioCapture:
                 print(f"[Audio] Selected device: {self.device_name} (index {device_index})")
             return
         
-        # Default: try to find monitor device
+        # Default: try to find monitor device first, then try pipewire
         monitor_idx = self.find_monitor_device()
         if monitor_idx is not None:
             self.device_index = monitor_idx
@@ -90,7 +90,17 @@ class AudioCapture:
             self.device_name = devices[monitor_idx]['name']
             print(f"[Audio] Auto-selected monitor device: {self.device_name}")
         else:
-            # Use default input
+            # Try pipewire device which gives access to all PipeWire streams
+            devices = self.list_devices()
+            for device in devices:
+                if 'pipewire' in device['name'].lower():
+                    self.device_index = device['index']
+                    self.device_name = device['name']
+                    print(f"[Audio] Using PipeWire device: {self.device_name} (index {device['index']})")
+                    print(f"[Audio] This should capture from virtual audio devices")
+                    return
+            
+            # Fallback to default input
             self.device_index = None
             self.device_name = "default"
             print(f"[Audio] Using default input device")

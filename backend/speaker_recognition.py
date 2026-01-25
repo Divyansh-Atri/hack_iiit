@@ -15,8 +15,8 @@ import json
 class SpeakerRecognizer:
     def __init__(self, 
                  data_dir="data",
-                 switch_threshold=0.70,
-                 low_threshold=0.55,
+                 switch_threshold=0.40, # Lowered for easier testing
+                 low_threshold=0.30,   # Lowered for easier testing
                  margin=0.05,
                  window_size=5,
                  consecutive_required=2):
@@ -148,6 +148,13 @@ class SpeakerRecognizer:
             v = ref_embedding.flatten()
             similarity = 1.0 - cosine(u, v)
             scores[student_id] = float(similarity)
+        
+        # Debug scores
+        # print(f"[Recognition] Scores: {scores}")
+        sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+        if sorted_scores:
+            top_score = sorted_scores[0]
+            print(f"[Recognition] Raw scores: {top_score[0]}={top_score[1]:.3f}, ...")
         
         # Get best match
         if not scores:

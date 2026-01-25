@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extension Overlay Test</title>
+</head>
+<body>
+    <h1>Extension Overlay Diagnostic Tool</h1>
+    <button onclick="checkOverlay()" style="padding: 20px; font-size: 18px; margin: 20px;">Check Overlay Status</button>
+    <button onclick="forceVisible()" style="padding: 20px; font-size: 18px; margin: 20px; background: red; color: white;">Force Overlay Visible (RED)</button>
+    <pre id="output" style="background: #f0f0f0; padding: 20px; margin: 20px; font-size: 14px;"></pre>
+
+    <script>
+        function checkOverlay() {
+            let output = document.getElementById('output');
+            let overlay = document.getElementById('teams-accessibility-overlay');
+            
+            if (!overlay) {
+                output.textContent = 'ERROR: Overlay element does NOT exist!\nContent script is not running.';
+                return;
+            }
+            
+            let styles = window.getComputedStyle(overlay);
+            let info = `Overlay Status Report:
+=====================================
+Element exists: YES
+Display: ${styles.display}
+Visibility: ${styles.visibility}
+Opacity: ${styles.opacity}
+Position: ${styles.position}
+Top: ${styles.top}
+Left: ${styles.left}
+Transform: ${styles.transform}
+Z-index: ${styles.zIndex}
+Width: ${styles.width}
+Height: ${styles.height}
+Background: ${styles.background}
+Font-size: ${styles.fontSize}
+Color: ${styles.color}
+
+Text content: "${overlay.textContent}"
+Inner HTML length: ${overlay.innerHTML.length} characters
+`;
+            output.textContent = info;
+        }
+
+        function forceVisible() {
+            let overlay = document.getElementById('teams-accessibility-overlay');
+            if (!overlay) {
+                alert('Overlay does not exist!');
+                return;
+            }
+            
+            overlay.style.cssText = 'position: fixed !important; display: flex !important; top: 100px !important; left: 50% !important; transform: translateX(-50%) !important; z-index: 2147483647 !important; background: red !important; color: white !important; padding: 50px !important; font-size: 48px !important; border: 5px solid yellow !important;';
+            
+            alert('Overlay forced visible with RED background and YELLOW border!\nLook at the top-center of the page.');
+        }
+
+        // Auto-check on load
+        setTimeout(checkOverlay, 1000);
+    </script>
+</body>
+</html>

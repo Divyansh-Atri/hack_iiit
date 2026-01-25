@@ -7,9 +7,9 @@ from collections import deque
 
 class VADProcessor:
     def __init__(self, 
-                 energy_threshold=0.01,
+                 energy_threshold=0.005,  # Increased sensitivity (was 0.01)
                  frame_duration_ms=30,
-                 min_speech_duration_ms=300,
+                 min_speech_duration_ms=150,  # Faster triggering (was 300)
                  min_silence_duration_ms=200):
         """
         Initialize VAD processor

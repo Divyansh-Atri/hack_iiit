@@ -16,6 +16,35 @@ A comprehensive system for real-time speaker identification and classroom transc
 10. [Troubleshooting](#troubleshooting)
 11. [Security and Privacy](#security-and-privacy)
 
+## 🚀 Quick Start - Integrated System
+
+**New! Complete integration of all components with one-command setup:**
+
+```bash
+# One-time setup (installs dependencies, creates env files)
+./setup_integration.sh
+
+# Start all services (Backend API, Frontend, Real-Time Backend)
+./start_integrated_system.sh
+
+# Stop all services
+./stop_integrated_system.sh
+```
+
+**What you get:**
+- ✅ Backend API running on port 3001
+- ✅ Frontend running on port 3000  
+- ✅ Real-Time Recognition Backend on port 8000
+- ✅ Chrome Extension with recording controls
+- ✅ Automatic audio upload and transcript processing
+- ✅ Join code generation for students
+
+**Documentation:**
+- 📖 **[INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)** - Complete integration guide
+- 📋 **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Quick reference for daily use
+- 🔧 **[INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)** - Original integration workflow
+
+
 ## Overview
 
 ### Problem Statement
@@ -196,11 +225,28 @@ Extension "Stop" Click
 - **Node.js**: 18.0 or later
 - **Python**: 3.11 or later
 - **Browser**: Brave or Chrome (Chromium-based)
+- **Audio Control**: `pavucontrol` (Required for routing audio)
 - **Build Tools**: gcc, g++, gfortran, python3-devel, openblas-devel, lapack-devel, pkg-config
 
 ### Automated Installation
 
 Run the installation script from the project root:
+```bash
+./install_and_run.sh
+```
+
+**⚠️ CRITICAL AUDIO SETUP (Every time you restart):**
+
+For live recognition to work, you MUST route audio using `pavucontrol`:
+
+1.  **Install pavucontrol**: `sudo apt install pavucontrol` (or `dnf install pavucontrol`)
+2.  **Start the System**: `./start_integrated_system.sh`
+3.  **Open Extension**: Click "Start" to begin listening.
+4.  **Open pavucontrol**:
+    -   **Playback Tab**: Change Chrome/Teams output to **"Virtual Speaker for Teams"**.
+    -   **Recording Tab**: Change python3.10 input to **"Monitor of Virtual Speaker for Teams"**.
+
+If you skip this, the system will listen to your microphone (silence) instead of the meeting!
 
 ```bash
 ./install_and_run.sh
@@ -668,8 +714,13 @@ pactl list short sources | grep monitor
 
 **VAD always reports silence**:
 - Verify audio levels in enrollment UI
+- Verify audio levels in enrollment UI
 - Lower `energy_threshold` in `backend/vad.py`
-- Confirm Teams audio is routed to virtual sink
+- **Check Audio Routing (Most Common Issue)**:
+    1.  Open `pavucontrol`.
+    2.  Check **Recording** tab.
+    3.  Ensure `python3.10` (or `ALSA plug-in`) is capturing from **"Monitor of Virtual Speaker for Teams"**.
+    4.  If it's capturing from "Internal Microphone", change it!
 
 **Recognition not functioning**:
 - Verify student enrollment: Check `backend/data/students.json`
