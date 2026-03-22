@@ -40,9 +40,9 @@ A comprehensive system for real-time speaker identification and classroom transc
 -  Join code generation for students
 
 **Documentation:**
-- 📖 **[INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)** - Complete integration guide
-- 📋 **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Quick reference for daily use
-- 🔧 **[INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)** - Original integration workflow
+-  **[INTEGRATION_COMPLETE.md](INTEGRATION_COMPLETE.md)** - Complete integration guide
+-  **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - Quick reference for daily use
+-  **[INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md)** - Original integration workflow
 
 
 ## Overview
@@ -235,7 +235,7 @@ Run the installation script from the project root:
 ./install_and_run.sh
 ```
 
-**⚠️ CRITICAL AUDIO SETUP (Every time you restart):**
+** CRITICAL AUDIO SETUP (Every time you restart):**
 
 For live recognition to work, you MUST route audio using `pavucontrol`:
 
